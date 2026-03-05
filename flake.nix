@@ -8,7 +8,7 @@
     logos-liblogos.url = "github:logos-co/logos-liblogos";
     logos-package-manager.url = "github:logos-co/logos-package-manager-module";
     logos-capability-module.url = "github:logos-co/logos-capability-module";
-    logos-package.url = "github:logos-co/logos-package/add-manifest-json-getter";
+    logos-package.url = "github:logos-co/logos-package";
     logos-package-manager-ui.url = "github:logos-co/logos-package-manager-ui";
     logos-webview-app.url = "github:logos-co/logos-webview-app";
     logos-design-system.url = "github:logos-co/logos-design-system";
