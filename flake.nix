@@ -110,7 +110,7 @@
             preinstallPkgs = preinstallPkgsDistributed;
             portable = true;
           };
-          
+
           # macOS distribution packages (only for Darwin)
           appBundle = if pkgs.stdenv.isDarwin then
             import ./nix/macos-bundle.nix {
@@ -123,6 +123,17 @@
             import ./nix/macos-dmg.nix {
               inherit pkgs;
               appBundle = appBundle;
+            }
+          else null;
+
+          macosApp = if pkgs.stdenv.isDarwin then
+            nix-bundle-macos-app.lib.${system}.mkMacOSApp {
+              drv = appDistributed;
+              name = "LogosApp";
+              bundle = dirBundler appDistributed;
+              icon = ./app/macos/logos.icns;
+              infoPlist = ./app/macos/Info.plist.in;
+              entitlements = ./app/macos/LogosApp.entitlements;
             }
           else null;
 
@@ -148,6 +159,9 @@
           # Bundle outputs
           bin-bundle-dir = dirBundler appDistributed;
 
+          # Smoke test (also exposed as a package so it can be built standalone)
+          smoke-test = import ./nix/smoke-test.nix { inherit pkgs; appPkg = app; };
+
           # Default package
           default = app;
         } // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
@@ -159,13 +173,11 @@
             icon = ./app/icons/logos.png;
           };
         } // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
-          bin-macos-app = nix-bundle-macos-app.lib.${system}.mkMacOSApp {
-            drv = appDistributed;
-            name = "LogosApp";
-            bundle = dirBundler appDistributed;
-            icon = ./app/macos/logos.icns;
-            infoPlist = ./app/macos/Info.plist.in;
-            entitlements = ./app/macos/LogosApp.entitlements;
+          bin-macos-app = macosApp;
+          smoke-test-bundle = import ./nix/smoke-test.nix {
+            inherit pkgs;
+            appPkg = macosApp;
+            appBin = "${macosApp}/LogosApp.app/Contents/MacOS/LogosApp";
           };
         } // (if pkgs.stdenv.isDarwin then {
           # macOS distribution outputs
@@ -176,6 +188,10 @@
           appimage = appImage;
         } else {})
       );
+
+      checks = forAllSystems ({ pkgs, system, ... }: {
+        smoke-test = self.packages.${system}.smoke-test;
+      });
 
       devShells = forAllSystems ({ pkgs, logosSdk, logosLiblogos, logosPackageManager, logosCapabilityModule, logosPackageLib, logosDesignSystem, logosCppSdkSrc, logosLiblogosSrc, logosPackageManagerSrc, logosCapabilityModuleSrc }: {
         default = pkgs.mkShell {

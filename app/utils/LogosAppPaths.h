@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QStandardPaths>
 #include <QString>
+#include <QProcessEnvironment>
 
 namespace LogosAppPaths {
 
@@ -15,24 +16,35 @@ constexpr bool isPortableBuild()
 #endif
 }
 
+// Base data directory. LOGOS_DATA_DIR overrides QStandardPaths so tests and
+// CI can redirect writes to a writable path (e.g. the Nix build output dir)
+// without relying on the system home directory.
+inline QString dataDirectory()
+{
+    const QString override = qEnvironmentVariable("LOGOS_DATA_DIR");
+    if (!override.isEmpty())
+        return override;
+    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+}
+
 inline QString portablePluginsDirectory()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/plugins";
+    return dataDirectory() + "/plugins";
 }
 
 inline QString portableModulesDirectory()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/modules";
+    return dataDirectory() + "/modules";
 }
 
 inline QString nonPortablePluginsDirectory()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "Nix" + "/plugins";
+    return dataDirectory() + "Nix" + "/plugins";
 }
 
 inline QString nonPortableModulesDirectory()
 {
-    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "Nix" + "/modules";
+    return dataDirectory() + "Nix" + "/modules";
 }
 
 inline QString pluginsDirectory()
