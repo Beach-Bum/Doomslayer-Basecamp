@@ -1,4 +1,77 @@
-# logos-basecamp
+# Logos Basecamp — Doomslayer-UI Skin
+
+> Logos Basecamp reskinned with [Doomslayer-UI](https://github.com/Beach-Bum/Doomslayer-UI) — a TUI-style design system with 7 terminal color themes.
+
+## What Changed
+
+This branch applies the Doomslayer-UI design system across the entire Basecamp application:
+
+### C++ (compiled changes)
+- **Global QPalette** — all QWidget backgrounds, text, buttons default to Doomslayer dark colors
+- **Tab bar** — monospace font, sharp corners, themed colors
+- **MDI area + child windows** — dark backgrounds, themed borders
+- **Plugin widget styling** — auto-applies dark stylesheet to every loaded plugin
+- **Theme sync** — `MainUIBackend.currentTheme` property shared across all QML engines, writes to `/tmp/.doomslayer-theme` for plugin sync
+- **Theme injection** — every plugin QML engine gets the theme import path
+
+### QML (hot-reloadable via `run-dev.sh`)
+- **11 QML files reskinned** — sidebar, controls, all views (Dashboard, Modules, Settings, CoreModules, PluginMethods, UiModules)
+- **DSTheme singleton** — 7 themes: default, solarized, nord, dracula, monokai, ayu-dark, ayu-light
+- **17 DS* components** — Button, Card, Tag, FilterButton, KeyValueRow, ProgressBar, SectionTitle, StatusBadge, TextField, TextArea, Table, TabBar, Separator, Badge, Console, ThemePicker
+- **Flat PNG icons** — terminal, counter, packages, globe, dashboard, modules, settings
+- **Doomguy pixel art** logo in sidebar
+- **TUI aesthetic** — monospace Menlo font, box-drawing borders, ANSI colors, zero rounded corners
+
+### Skinned plugins
+- **counter_qml** — fully reskinned with DSTheme, theme syncs via file polling
+- **package_manager_ui** — all hardcoded colors replaced with DSTheme properties
+
+## Themes
+
+Switch themes in **Settings > Appearance** or via the top title bar. All engines sync.
+
+| Theme | Background | Style |
+|-------|-----------|-------|
+| default | `#1b1d1e` | WeeChat classic dark |
+| solarized | `#002b36` | Solarized Dark |
+| nord | `#2e3440` | Arctic blue |
+| dracula | `#282a36` | Vibrant dark |
+| monokai | `#272822` | Sublime-style |
+| ayu-dark | `#0a0e14` | Deep midnight |
+| ayu-light | `#fafafa` | Clean light mode |
+
+## Quick Start
+
+```bash
+# Build
+nix build
+
+# Run with hot-reload (edit QML, restart to see changes)
+./run-dev.sh
+```
+
+## Design System
+
+The Doomslayer-UI design system lives in `src/qml/theme/` and is available to all QML files via `import theme 1.0`. Any new module can use it:
+
+```qml
+import theme 1.0
+
+Rectangle {
+    color: DSTheme.bg
+
+    DSButton {
+        text: "Hello"
+        primary: true
+    }
+}
+```
+
+Full design system repo: [github.com/Beach-Bum/Doomslayer-UI](https://github.com/Beach-Bum/Doomslayer-UI)
+
+---
+
+# Original README
 
 ## Download
 
