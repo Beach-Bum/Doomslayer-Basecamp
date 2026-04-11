@@ -10,7 +10,7 @@ MdiChild::MdiChild(QWidget *parent)
     // set background color
     setAutoFillBackground(true);
     QPalette p = palette();
-    p.setColor(QPalette::Window, QColor("#171717"));
+    p.setColor(QPalette::Window, QColor("#1b1d1e"));
     setPalette(p);
 
     // Create a layout for the child window
@@ -22,7 +22,7 @@ MdiChild::MdiChild(QWidget *parent)
 
     // Create a label with some content
     contentLabel = new QLabel(this);
-    contentLabel->setStyleSheet("color: #A3A3A3;");
+    contentLabel->setStyleSheet("color: #636363;");
     contentLabel->setAlignment(Qt::AlignCenter);
     contentLabel->setText("MDI Child Window Content\n\n"
                          "This is a sample MDI child window.\n"
@@ -47,9 +47,9 @@ void MdiChild::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
 
-    const QColor backgroundColor("#171717");
-    const QColor borderColor("#434343");
-    const qreal radius = 16.0;
+    const QColor backgroundColor("#1b1d1e");
+    const QColor borderColor("#4a4d4e");
+    const qreal radius = 0.0;  // TUI: no rounded corners
     const qreal penWidth = 2.0;
 
     QPainter painter(this);

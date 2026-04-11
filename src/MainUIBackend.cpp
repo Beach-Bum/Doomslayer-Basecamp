@@ -19,6 +19,7 @@
 #include <QUrl>
 #include <QIcon>
 #include <QStandardPaths>
+#include <QProcessEnvironment>
 #include <QPointer>
 #include <QFileDialog>
 #include <memory>
@@ -668,6 +669,11 @@ void MainUIBackend::loadQmlView(const QString& moduleName,
         // The sandbox restricts network + filesystem, not Qt APIs.
         QStringList importPaths = engine->importPathList();
         importPaths.prepend(installDir);
+        // Doomslayer-UI: inject theme so ui_qml views can use DSTheme
+        QString qmlUi = QProcessEnvironment::systemEnvironment().value("QML_UI", "");
+        if (!qmlUi.isEmpty()) {
+            importPaths << QDir(qmlUi).absolutePath() + "/qml";
+        }
         engine->setImportPathList(importPaths);
 
         // Restrict native plugin search to Qt system paths + the plugin's own

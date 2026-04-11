@@ -1,36 +1,44 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Logos.Controls
+import theme 1.0
 
 Item {
     id: root
 
     Rectangle {
         anchors.fill: parent
-        color: "#1e1e1e"
+        color: DSTheme.bg
     }
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 40
-        spacing: 20
+        anchors.margins: DSTheme.spacingXl
+        spacing: DSTheme.spacingMd
 
-        LogosText {
-            text: "Settings"
-            font.pixelSize: 24
-            font.weight: Font.Bold
-            color: "#ffffff"
-        }
+        DSSectionTitle { text: "Settings" }
 
-        LogosText {
-            text: "This is the Settings content area."
-            color: "#a0a0a0"
-        }
+        // ── Appearance ───────────────────────────────────────────────
+        DSSectionTitle { text: "Appearance"; small: true }
+
+        DSThemePicker {}
+
+        DSSeparator {}
+
+        // ── Network ─────────────────────────────────────────────────
+        DSSectionTitle { text: "Network"; small: true }
+
+        DSKeyValueRow { label: "Waku endpoint";   value: "ws://127.0.0.1:8546" }
+        DSKeyValueRow { label: "Codex endpoint";  value: "http://127.0.0.1:8080" }
+        DSKeyValueRow { label: "Nomos endpoint";  value: "http://127.0.0.1:8090" }
+
+        DSSeparator {}
+
+        // ── Plugin Directory ─────────────────────────────────────────
+        DSSectionTitle { text: "Plugin Directory"; small: true }
+
+        DSKeyValueRow { label: "Path"; value: "~/.logos-basecamp/plugins"; copyable: false }
 
         Item { Layout.fillHeight: true }
     }
 }
-
-
-

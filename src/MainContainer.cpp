@@ -90,7 +90,7 @@ QUrl MainContainer::resolveQmlUrl(const QString& qmlFile)
 void MainContainer::setupUi()
 {
     // We would likely move this to qml and use Logos.Theme instead
-    QColor bgColor("#171717");
+    QColor bgColor("#1b1d1e");  // DSTheme.bg (default)
     // set background color
     setAutoFillBackground(true);
     QPalette p = palette();
@@ -104,6 +104,9 @@ void MainContainer::setupUi()
     // When QML_UI is set, add it to each QML engine's import path so nested
     // components (e.g. SidebarIconButton) load from disk — no rebuild for UI changes.
     QString qmlUiPath = QProcessEnvironment::systemEnvironment().value("QML_UI", "");
+
+    // Doomslayer-UI: inject theme import path into every engine
+    QString themePath = qmlUiPath.isEmpty() ? "" : QDir(qmlUiPath).absolutePath() + "/qml";
 
     // === SIDEBAR (QML) ===
     m_sidebarWidget = new QQuickWidget(this);

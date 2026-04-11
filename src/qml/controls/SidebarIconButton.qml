@@ -1,29 +1,26 @@
 import QtQuick
 import QtQuick.Controls
-import Logos.Theme
+import theme 1.0
 
 AbstractButton {
     id: root
 
-    implicitHeight: 46
+    implicitHeight: 42
     checkable: true
     autoExclusive: true
 
-    background: Image {
-        width: 56
-        height: 46
-        anchors.centerIn: parent
-        source: "qrc:/icons/workspace.png"
-        fillMode: Image.PreserveAspectFit
+    background: Rectangle {
+        radius: 0
+        color: root.checked ? DSTheme.activeBg : "transparent"
     }
 
     contentItem: Item {
-        Image {
+        Text {
             anchors.centerIn: parent
-            width: 24
-            height: 24
-            source: root.icon.source
-            fillMode: Image.PreserveAspectFit
+            font.family: DSTheme.fontFamily
+            font.pixelSize: 16
+            text: "\u2726"
+            color: root.checked ? DSTheme.yellow : DSTheme.dimFg
         }
     }
 }

@@ -1,39 +1,133 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import theme 1.0
 
 Item {
     id: root
 
     Rectangle {
         anchors.fill: parent
-        color: "#1e1e1e"
+        color: DSTheme.bg
     }
 
-    // Content views stack (indices 1-3 from backend, mapped to 0-2 here)
-    // Index 0 (Apps/MDI) is handled by the C++ MdiView widget
-    StackLayout {
-        id: contentStack
+    ColumnLayout {
         anchors.fill: parent
-        
-        // Map backend index: 1=Dashboard, 2=Modules, 3=Settings
-        // to internal index: 0=Dashboard, 1=Modules, 2=Settings
-        currentIndex: Math.max(0, backend.currentActiveSectionIndex - 1)
+        spacing: 0
 
-        // Dashboard (backend index 1 -> internal index 0)
-        DashboardView {
-            id: dashboardView
+        // ── Top title bar ────────────────────────────────────────────
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 22
+            color: DSTheme.statusBg
+
+            RowLayout {
+                anchors.fill: parent
+                anchors.leftMargin: DSTheme.spacingMd
+                anchors.rightMargin: DSTheme.spacingMd
+                spacing: DSTheme.spacingMd
+
+                Text {
+                    text: "\u27E1 Logos Basecamp \u2502 v0.1.0-dev"
+                    font.family: DSTheme.fontFamily
+                    font.pixelSize: DSTheme.fontSizeDefault
+                    color: DSTheme.fg
+                }
+
+                Item { Layout.fillWidth: true }
+
+                Repeater {
+                    model: DSTheme.themeNames
+                    delegate: Text {
+                        required property string modelData
+                        text: modelData
+                        font.family: DSTheme.fontFamily
+                        font.pixelSize: DSTheme.fontSizeSmall
+                        color: DSTheme.currentTheme === modelData ? DSTheme.yellow : DSTheme.dimFg
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: DSTheme.setTheme(modelData)
+                        }
+                    }
+                }
+            }
         }
 
-        // Modules (backend index 2 -> internal index 1)
-        ModulesView {
-            id: modulesView
+        // ── Top border ───────────────────────────────────────────────
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 1
+            color: DSTheme.border
         }
 
-        // Settings (backend index 3 -> internal index 2)
-        SettingsView {
-            id: settingsView
+        // ── Content stack ────────────────────────────────────────────
+        StackLayout {
+            id: contentStack
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            currentIndex: Math.max(0, backend.currentActiveSectionIndex - 1)
+
+            DashboardView {
+                id: dashboardView
+            }
+
+            ModulesView {
+                id: modulesView
+            }
+
+            SettingsView {
+                id: settingsView
+            }
+        }
+
+        // ── Bottom border ────────────────────────────────────────────
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 1
+            color: DSTheme.border
+        }
+
+        // ── Bottom status bar ────────────────────────────────────────
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 20
+            color: DSTheme.statusBg
+
+            RowLayout {
+                anchors.fill: parent
+                anchors.leftMargin: DSTheme.spacingMd
+                anchors.rightMargin: DSTheme.spacingMd
+                spacing: DSTheme.spacingMd
+
+                Text {
+                    text: {
+                        var idx = Math.max(0, backend.currentActiveSectionIndex - 1)
+                        var names = ["Dashboard", "Modules", "Settings"]
+                        return "[" + (names[idx] || "Dashboard") + "]"
+                    }
+                    font.family: DSTheme.fontFamily
+                    font.pixelSize: DSTheme.fontSizeDefault
+                    color: DSTheme.dimFg
+                }
+
+                Text {
+                    text: "Logos Basecamp"
+                    font.family: DSTheme.fontFamily
+                    font.pixelSize: DSTheme.fontSizeDefault
+                    color: DSTheme.blue
+                }
+
+                Item { Layout.fillWidth: true }
+
+                Text {
+                    text: "modules: " + (backend.coreModules ? backend.coreModules.length : 0)
+                    font.family: DSTheme.fontFamily
+                    font.pixelSize: DSTheme.fontSizeDefault
+                    color: DSTheme.dimFg
+                }
+            }
         }
     }
 }
-

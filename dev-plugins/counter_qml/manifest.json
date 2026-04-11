@@ -1,0 +1,18 @@
+{
+  "author": "Logos Core Team",
+  "category": "misc",
+  "dependencies": [],
+  "description": "Simple counter plugin implemented entirely in QML",
+  "hashes": {
+    "root": "509ae008cf819e2a546d7b995ae67e838ef5d67f3529480826288d1edbc1dc63",
+    "variants": "3977a5489159c84ec38d19d0cb21b59d0b14cd893726eb851ddd4ddd86893ebb",
+    "variants/darwin-arm64-dev": "552be78fdb77be91553f0a05dbb25eb9f4efcded68e882c423ecf5994aefa6f5"
+  },
+  "icon": "counter.png",
+  "main": {},
+  "manifestVersion": "0.2.0",
+  "name": "counter_qml",
+  "type": "ui_qml",
+  "version": "1.0.0",
+  "view": "Main.qml"
+}

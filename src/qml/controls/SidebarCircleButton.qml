@@ -1,41 +1,51 @@
 import QtQuick
 import QtQuick.Controls
-import Logos.Theme
-import Logos.Controls
+import theme 1.0
 
 AbstractButton {
     id: root
 
-    implicitHeight: 38
-    implicitWidth: 38
+    implicitHeight: 46
+    implicitWidth: 56
 
-    // Dark gray pill background extending to left edge when active/highlighted
+    readonly property string _iconsDir: "file:///Users/beachbum/Downloads/logos-basecamp/src/qml/icons/"
+
+    readonly property string _iconSource: {
+        var n = root.text.toLowerCase()
+        if (n.indexOf("dash") >= 0)    return _iconsDir + "dashboard.png"
+        if (n.indexOf("module") >= 0)  return _iconsDir + "modules.png"
+        if (n.indexOf("setting") >= 0) return _iconsDir + "settings.png"
+        return ""
+    }
+
     background: Rectangle {
-        radius: width / 2
-        color: Theme.palette.surface
+        radius: 0
+        color: root.checked ? DSTheme.activeBg
+             : root.hovered ? DSTheme.statusBg
+             : "transparent"
         border.width: root.hovered ? 1 : 0
-        border.color: Theme.palette.borderSecondary
+        border.color: DSTheme.border
     }
 
     contentItem: Item {
         Image {
-            id: appIcon
+            id: viewIcon
             anchors.centerIn: parent
             width: 24
             height: 24
-            source: root.icon.source
+            source: root._iconSource
             fillMode: Image.PreserveAspectFit
-            visible: !!root.icon.source &&
-                     !(appIcon.status === Image.Null ||
-                       appIcon.status === Image.Error)
+            visible: viewIcon.status === Image.Ready
+            opacity: root.checked ? 1.0 : 0.5
         }
-        LogosText {
+
+        Text {
             anchors.centerIn: parent
-            text: root.text.substring(0, 4)
-            font.pixelSize: Theme.typography.secondaryText
-            font.weight: Theme.typography.weightBold
-            color: Theme.palette.textSecondary
-            visible: !appIcon.visible
+            font.family: DSTheme.fontFamily
+            font.pixelSize: 12
+            text: root.text.substring(0, 3)
+            color: root.checked ? DSTheme.yellow : DSTheme.dimFg
+            visible: !viewIcon.visible
         }
     }
 }

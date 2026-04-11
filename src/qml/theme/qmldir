@@ -1,0 +1,20 @@
+module theme
+
+singleton DSTheme 1.0 DSTheme.qml
+
+DSButton          1.0 DSButton.qml
+DSCard            1.0 DSCard.qml
+DSTag             1.0 DSTag.qml
+DSFilterButton    1.0 DSFilterButton.qml
+DSKeyValueRow     1.0 DSKeyValueRow.qml
+DSProgressBar     1.0 DSProgressBar.qml
+DSSectionTitle    1.0 DSSectionTitle.qml
+DSStatusBadge     1.0 DSStatusBadge.qml
+DSTextField       1.0 DSTextField.qml
+DSTextArea        1.0 DSTextArea.qml
+DSTable           1.0 DSTable.qml
+DSTabBar          1.0 DSTabBar.qml
+DSSeparator       1.0 DSSeparator.qml
+DSBadge           1.0 DSBadge.qml
+DSConsole         1.0 DSConsole.qml
+DSThemePicker     1.0 DSThemePicker.qml
