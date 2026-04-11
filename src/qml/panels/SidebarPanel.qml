@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Logos.Theme
+import theme 1.0
 import controls
 
 Control {
@@ -18,14 +18,13 @@ Control {
     signal updateLauncherIndex(int index)
 
     padding: 0
-    bottomPadding: Theme.spacing.large
-    topPadding: Theme.spacing.large + _d.systemTitleBarPadding
+    bottomPadding: DSTheme.spacingXl
+    topPadding: DSTheme.spacingXl + _d.systemTitleBarPadding
     topInset: _d.systemTitleBarPadding
 
     QtObject {
         id: _d
 
-        // Filter sections by type
         readonly property var workspaceSections: (root.sections || []).filter(function(item) {
             return item && item.type === "workspace"
         })
@@ -42,23 +41,25 @@ Control {
             return item && item.isLoaded === false
         })
 
-        readonly property int systemTitleBarPadding: Qt.platform.os === "osx" ? 30: 0
+        readonly property int systemTitleBarPadding: Qt.platform.os === "osx" ? 30 : 0
     }
 
     background: Rectangle {
-        radius: Theme.spacing.radiusXlarge
-        color: Theme.palette.backgroundSecondary
+        radius: 0
+        color: DSTheme.bg
     }
 
     contentItem: ColumnLayout {
-        spacing: Theme.spacing.large
+        spacing: DSTheme.spacingMd
 
+        // Logo — Doomguy
         Image {
-            // As per design
-            Layout.preferredWidth: 46
-            Layout.preferredHeight: 25
+            source: "../icons/doomguy.png"
+            Layout.preferredWidth: 32
+            Layout.preferredHeight: 32
             Layout.alignment: Qt.AlignHCenter
-            source: "qrc:/icons/basecamp.png"
+            fillMode: Image.PreserveAspectFit
+            smooth: false
         }
 
         SeparatorLine {}
@@ -66,7 +67,7 @@ Control {
         // Workspaces
         Column {
             Layout.fillWidth: true
-            spacing: Theme.spacing.small
+            spacing: DSTheme.spacingSm
 
             Repeater {
                 id: workspaceRepeater
@@ -108,7 +109,7 @@ Control {
 
                     width: parent.width
                     spacing: 2
-                    
+
                     // Loaded apps
                     Repeater {
                         id: loadedAppsRepeater
@@ -126,8 +127,8 @@ Control {
                     }
 
                     SeparatorLine {
-                        Layout.topMargin: Theme.spacing.small
-                        Layout.bottomMargin: Theme.spacing.small
+                        Layout.topMargin: DSTheme.spacingSm
+                        Layout.bottomMargin: DSTheme.spacingSm
                         visible: loadedAppsRepeater.count > 0
                     }
 
@@ -152,12 +153,12 @@ Control {
 
         // View sections (Dashboard, Modules, Settings)
         ColumnLayout {
-            spacing: Theme.spacing.medium
+            spacing: DSTheme.spacingSm
             Layout.alignment: Qt.AlignBottom | Qt.AlignHCenter
             Repeater {
                 model: _d.viewSections
                 delegate: SidebarCircleButton {
-                    checked: backend.currentActiveSectionIndex -1 === index
+                    checked: backend.currentActiveSectionIndex - 1 === index
                     text: modelData.name
                     icon.source: modelData.iconPath
                     onClicked: root.updateLauncherIndex(_d.workspaceSections.length + index)
@@ -170,8 +171,8 @@ Control {
     component SeparatorLine: Rectangle {
         Layout.fillWidth: true
         Layout.preferredHeight: 1
-        Layout.leftMargin: Theme.spacing.tiny
-        Layout.rightMargin: Theme.spacing.tiny
-        color: Theme.palette.borderTertiaryMuted
+        Layout.leftMargin: DSTheme.spacingXs
+        Layout.rightMargin: DSTheme.spacingXs
+        color: DSTheme.border
     }
 }

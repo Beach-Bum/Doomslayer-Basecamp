@@ -1,36 +1,22 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Logos.Controls
+import theme 1.0
 
 Item {
     id: root
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 20
+        spacing: DSTheme.spacingMd
 
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: 10
+        DSSectionTitle { text: "UI Modules"; small: true }
 
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 4
-
-                LogosText {
-                    text: "UI Modules"
-                    font.pixelSize: 20
-                    font.weight: Font.Bold
-                    color: "#ffffff"
-                }
-
-                LogosText {
-                    text: "Available UI plugins in the system"
-                    color: "#a0a0a0"
-                }
-            }
-
+        Text {
+            text: "Available UI plugins in the system"
+            font.family: DSTheme.fontFamily
+            font.pixelSize: DSTheme.fontSizeDefault
+            color: DSTheme.dimFg
         }
 
         ScrollView {
@@ -40,100 +26,52 @@ Item {
 
             ColumnLayout {
                 width: parent.width
-                spacing: 8
+                spacing: 2
 
                 Repeater {
                     model: backend.uiModules
 
                     Rectangle {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 70
-                        color: "#2d2d2d"
-                        radius: 8
-                        border.color: "#3d3d3d"
-                        border.width: 1
+                        Layout.preferredHeight: DSTheme.rowHeight
+                        color: index % 2 === 0 ? DSTheme.bg : DSTheme.altBg
+                        radius: 0
 
                         RowLayout {
                             anchors.fill: parent
-                            anchors.margins: 12
-                            spacing: 12
+                            anchors.leftMargin: DSTheme.spacingMd
+                            anchors.rightMargin: DSTheme.spacingMd
+                            spacing: DSTheme.spacingMd
 
-                            // Icon
-                            Rectangle {
-                                width: 48
-                                height: 48
-                                radius: 8
-                                color: "#3d3d3d"
-
-                                Image {
-                                    anchors.centerIn: parent
-                                    source: modelData.iconPath || ""
-                                    sourceSize.width: 32
-                                    sourceSize.height: 32
-                                    visible: modelData.iconPath && modelData.iconPath.length > 0
-                                }
-
-                                LogosText {
-                                    anchors.centerIn: parent
-                                    text: modelData.name.substring(0, 2).toUpperCase()
-                                    font.pixelSize: 16
-                                    font.weight: Font.Bold
-                                    color: "#808080"
-                                    visible: !modelData.iconPath || modelData.iconPath.length === 0
-                                }
-                            }
-
-                            // Name
-                            LogosText {
+                            Text {
                                 text: modelData.name
-                                font.pixelSize: 16
-                                font.weight: Font.Bold
-                                color: "#ffffff"
-                                Layout.fillWidth: true
+                                font.family: DSTheme.fontFamily
+                                font.pixelSize: DSTheme.fontSizeDefault
+                                font.bold: true
+                                color: DSTheme.yellow
+                                Layout.preferredWidth: 160
                             }
 
-                            // Load/Unload buttons (hidden for main_ui)
-                            Button {
+                            Text {
+                                text: modelData.isLoaded ? "(loaded)" : "(not loaded)"
+                                font.family: DSTheme.fontFamily
+                                font.pixelSize: DSTheme.fontSizeDefault
+                                color: modelData.isLoaded ? DSTheme.cyan : DSTheme.dimFg
+                            }
+
+                            Item { Layout.fillWidth: true }
+
+                            DSButton {
                                 text: "Load"
+                                primary: true
                                 visible: !modelData.isMainUi && !modelData.isLoaded
-
-                                contentItem: LogosText {
-                                    text: parent.text
-                                    font.pixelSize: 13
-                                    color: "#ffffff"
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-
-                                background: Rectangle {
-                                    implicitWidth: 80
-                                    implicitHeight: 32
-                                    color: parent.pressed ? "#45a049" : "#4CAF50"
-                                    radius: 4
-                                }
-
                                 onClicked: backend.loadUiModule(modelData.name)
                             }
 
-                            Button {
+                            DSButton {
                                 text: "Unload"
+                                danger: true
                                 visible: !modelData.isMainUi && modelData.isLoaded
-
-                                contentItem: LogosText {
-                                    text: parent.text
-                                    font.pixelSize: 13
-                                    color: "#ffffff"
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-
-                                background: Rectangle {
-                                    implicitWidth: 80
-                                    implicitHeight: 32
-                                    color: parent.pressed ? "#da190b" : "#f44336"
-                                    radius: 4
-                                }
-
                                 onClicked: backend.unloadUiModule(modelData.name)
                             }
                         }
@@ -141,17 +79,16 @@ Item {
                 }
 
                 // Empty state
-                LogosText {
+                Text {
                     text: "No UI plugins found in the plugins directory."
-                    color: "#606060"
+                    font.family: DSTheme.fontFamily
+                    font.pixelSize: DSTheme.fontSizeDefault
+                    color: DSTheme.dimFg
                     Layout.alignment: Qt.AlignHCenter
-                    Layout.topMargin: 40
+                    Layout.topMargin: DSTheme.spacingXl
                     visible: backend.uiModules.length === 0
                 }
             }
         }
     }
 }
-
-
-

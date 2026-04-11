@@ -36,7 +36,7 @@ void MdiView::setupUi()
     mdiArea->setViewMode(QMdiArea::SubWindowView);
     
     // TODO: this should probably be a qml file and should then use Logos.Theme instead
-    mdiArea->setBackground(QColor("#171717"));
+    mdiArea->setBackground(QColor("#1b1d1e"));  // DSTheme.bg
     
     mdiArea->setTabsClosable(true);
     
@@ -156,31 +156,34 @@ void MdiView::customizeTabBarStyle(QTabBar* tabBar)
 
     tabBar->setStyleSheet(QStringLiteral(R"(
         QTabBar {
-            background: #171717;
+            background: #1b1d1e;
             border: none;
             qproperty-drawBase: false;
+            font-family: Menlo, monospace;
+            font-size: 11px;
         }
-    
+
         QTabBar::tab {
-            background: #262626;
-            color: #A4A4A4;
-    
+            background: #2a2d2e;
+            color: #c5c8c6;
+
             padding: 0px 8px 0px 4px;
-            margin-right: 10px;
-        
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
+            margin-right: 2px;
+
+            border: 1px solid #4a4d4e;
+            border-bottom: none;
             height: 20px;
             min-width: 120px;
         }
-    
+
         QTabBar::tab:!selected {
-            background: rgba(38, 38, 38, 0.6);
-            color: #626262;
+            background: #1b1d1e;
+            color: #636363;
+            border-color: #2a2d2e;
         }
 
-        QTabBar::tab:hover { 
-            background: #262626; 
+        QTabBar::tab:hover {
+            background: #3a3d3e;
         }
 
     )"));
@@ -204,7 +207,7 @@ void MdiView::installTabBarCloseButtons(QTabBar* tabBar)
         btn->setCursor(Qt::PointingHandCursor);
         btn->setStyleSheet(QStringLiteral(R"(
             QToolButton { background: transparent; border: none; }
-            QToolButton:hover { background: rgba(255,255,255,0.1); border-radius: 6px; }
+            QToolButton:hover { background: #3a3d3e; }
         )"));
         connect(btn, &QToolButton::clicked, this, [tabBar, btn, closeSide]() {
             for (int j = 0; j < tabBar->count(); ++j) {
@@ -237,17 +240,16 @@ void MdiView::ensureMdiAddButton(QTabBar* tabBar)
         m_mdiAddBtn->setFixedSize(25, 19);
         m_mdiAddBtn->setStyleSheet(QStringLiteral(R"(
             QToolButton {
-                background: #2A2A2A;
-                color: #FFFFFF;
-                border-top-left-radius: 8px;
-                border-top-right-radius: 8px;
+                background: #2a2d2e;
+                color: #c5c8c6;
+                border: 1px solid #4a4d4e;
                 padding-top: 1px;
             }
             QToolButton:hover {
-                background: #262626;
+                background: #3a3d3e;
             }
             QToolButton:pressed {
-                background: #262626;
+                background: #3a3d3e;
             }
         )"));
         connect(m_mdiAddBtn, &QToolButton::clicked, this, &MdiView::addMdiWindow);
@@ -356,6 +358,13 @@ QMdiSubWindow* MdiView::addPluginWindow(QWidget* pluginWidget, const QString& ti
     }
     
     QMdiSubWindow *subWindow = new QMdiSubWindow();
+    // Doomslayer-UI: force dark background on all plugin widgets
+    pluginWidget->setStyleSheet(pluginWidget->styleSheet() +
+        QStringLiteral("QWidget { background-color: #1b1d1e; color: #c5c8c6; }"
+                       "QLabel { background-color: transparent; color: #c5c8c6; }"
+                       "QPushButton { background-color: #2a2d2e; color: #c5c8c6; border: 1px solid #4a4d4e; padding: 4px 12px; }"
+                       "QPushButton:hover { background-color: #3a3d3e; }"
+                       "QLineEdit, QTextEdit { background-color: #1b1d1e; color: #c5c8c6; border: 1px solid #4a4d4e; }"));
     subWindow->setWidget(pluginWidget);
     subWindow->setAttribute(Qt::WA_DeleteOnClose);
     subWindow->setWindowTitle(title);

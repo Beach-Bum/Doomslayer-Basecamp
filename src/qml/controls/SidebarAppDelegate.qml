@@ -1,9 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Effects
-
-import Logos.Theme
-import Logos.Controls
+import theme 1.0
 
 AbstractButton {
     id: root
@@ -13,13 +10,29 @@ AbstractButton {
 
     implicitHeight: 50
 
+    // Resolve icons via absolute file path
+    readonly property string _iconsDir: "file:///Users/beachbum/Downloads/logos-basecamp/src/qml/icons/"
+
+    readonly property string _iconSource: {
+        var n = root.text.toLowerCase()
+        if (n.indexOf("counter_qml") >= 0) return _iconsDir + "terminal.png"
+        if (n.indexOf("counter") >= 0)     return _iconsDir + "counter.png"
+        if (n.indexOf("package") >= 0)     return _iconsDir + "packages.png"
+        if (n.indexOf("webview") >= 0)     return _iconsDir + "globe.png"
+        return _iconsDir + "module.png"
+    }
+
     background: Rectangle {
-        color: root.loaded ? Theme.palette.backgroundTertiary : Theme.palette.overlayDark
+        radius: 0
+        color: root.checked ? DSTheme.activeBg
+             : root.hovered ? DSTheme.statusBg
+             : "transparent"
+
         Rectangle {
             anchors.left: parent.left
             width: 3
             height: parent.height
-            color: root.checked ? Theme.palette.accentOrange : "transparent"
+            color: root.checked ? DSTheme.yellow : "transparent"
         }
     }
 
@@ -27,59 +40,31 @@ AbstractButton {
         Image {
             id: appIcon
             anchors.centerIn: parent
-            width: 24
-            height: 24
-            source: root.icon.source
+            width: 28
+            height: 28
+            source: root._iconSource
             fillMode: Image.PreserveAspectFit
-            visible: !root.loading
-                     && !!root.icon.source
-                     && !(appIcon.status === Image.Null || appIcon.status === Image.Error)
-        }
-        MultiEffect {
-            anchors.fill: appIcon
-            source: appIcon
-            colorization: 1.0
-            colorizationColor: "transparent"
-            brightness: root.checked ? 0.5 : 0
-            visible: appIcon.visible
-        }
-        LogosText {
-            anchors.centerIn: parent
-            text: root.text.substring(0, 4)
-            font.pixelSize: Theme.typography.secondaryText
-            font.weight: Theme.typography.weightBold
-            color: Theme.palette.textSecondary
-            visible: !root.loading && !appIcon.visible
+            visible: !root.loading && appIcon.status === Image.Ready
+            opacity: root.loaded ? (root.checked ? 1.0 : 0.6) : 0.25
         }
 
-        Item {
-            id: spinner
+        Text {
             anchors.centerIn: parent
-            width: 20
-            height: 20
+            font.family: DSTheme.fontFamily
+            font.pixelSize: 14
+            text: "\u2026"
+            color: DSTheme.dimFg
             visible: root.loading
+        }
 
-            RotationAnimator on rotation {
-                running: spinner.visible
-                from: 0
-                to: 360
-                duration: 900
-                loops: Animation.Infinite
-            }
-
-            Repeater {
-                model: 8
-                Rectangle {
-                    required property int index
-                    width: 3
-                    height: 3
-                    radius: 1.5
-                    color: Theme.palette.textSecondary
-                    opacity: (index + 1) / 8
-                    x: spinner.width / 2 + 7 * Math.cos(index * Math.PI / 4) - width / 2
-                    y: spinner.height / 2 + 7 * Math.sin(index * Math.PI / 4) - height / 2
-                }
-            }
+        Text {
+            anchors.centerIn: parent
+            font.family: DSTheme.fontFamily
+            font.pixelSize: 14
+            font.bold: true
+            text: root.text.substring(0, 2)
+            color: root.loaded ? DSTheme.fg : DSTheme.dimFg
+            visible: !root.loading && !appIcon.visible
         }
     }
 }

@@ -1,21 +1,20 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Logos.Theme
-import Logos.Controls
+import theme 1.0
 
 Item {
     id: root
-    
+
     property string pluginName: ""
     property var methods: []
     property string resultText: ""
-    
+
     signal backClicked()
-    
+
     Component.onCompleted: loadMethods()
     onPluginNameChanged: loadMethods()
-    
+
     function loadMethods() {
         if (pluginName.length > 0) {
             let methodsJson = backend.getCoreModuleMethods(pluginName)
@@ -29,186 +28,145 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 20
+        spacing: DSTheme.spacingMd
 
         // Header with back button
         RowLayout {
             Layout.fillWidth: true
-            spacing: 16
+            spacing: DSTheme.spacingMd
 
-            Button {
-                text: "← Back"
-                
-                contentItem: LogosText {
-                    text: parent.text
-                    color: "#ffffff"
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
-
-                background: Rectangle {
-                    implicitWidth: 80
-                    implicitHeight: 32
-                    color: parent.pressed ? "#3d3d3d" : "#4b4b4b"
-                    radius: 4
-                }
-
+            DSButton {
+                text: "\u2190 Back"
                 onClicked: root.backClicked()
             }
 
-            LogosText {
+            DSSectionTitle {
                 text: "Methods: " + root.pluginName
-                font.pixelSize: 20
-                font.weight: Font.Bold
-                color: "#ffffff"
+                small: true
+                Layout.fillWidth: true
             }
-
-            Item { Layout.fillWidth: true }
         }
 
         // Methods list
-        Rectangle {
+        ScrollView {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            color: "#2d2d2d"
-            radius: 8
-            border.color: "#3d3d3d"
+            clip: true
+
+            ColumnLayout {
+                width: parent.width
+                spacing: 2
+
+                Repeater {
+                    model: root.methods
+
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: methodCol.implicitHeight + DSTheme.spacingMd
+                        color: index % 2 === 0 ? DSTheme.bg : DSTheme.altBg
+                        radius: 0
+
+                        ColumnLayout {
+                            id: methodCol
+                            anchors.fill: parent
+                            anchors.margins: DSTheme.spacingMd
+                            spacing: DSTheme.spacingSm
+
+                            RowLayout {
+                                Layout.fillWidth: true
+                                spacing: DSTheme.spacingMd
+
+                                Text {
+                                    text: modelData.name || modelData
+                                    font.family: DSTheme.fontFamily
+                                    font.pixelSize: DSTheme.fontSizeDefault
+                                    font.bold: true
+                                    color: DSTheme.blue
+                                }
+
+                                Text {
+                                    text: modelData.signature || ""
+                                    font.family: DSTheme.fontFamily
+                                    font.pixelSize: DSTheme.fontSizeDefault
+                                    color: DSTheme.dimFg
+                                    visible: modelData.signature !== undefined
+                                }
+
+                                Item { Layout.fillWidth: true }
+
+                                DSButton {
+                                    text: "Call"
+                                    primary: true
+                                    onClicked: {
+                                        let methodName = modelData.name || modelData
+                                        root.resultText = backend.callCoreModuleMethod(root.pluginName, methodName, "[]")
+                                    }
+                                }
+                            }
+
+                            Text {
+                                text: modelData.description || ""
+                                font.family: DSTheme.fontFamily
+                                font.pixelSize: DSTheme.fontSizeDefault
+                                color: DSTheme.dimFg
+                                wrapMode: Text.Wrap
+                                Layout.fillWidth: true
+                                visible: modelData.description !== undefined && modelData.description.length > 0
+                            }
+                        }
+                    }
+                }
+
+                // Empty state
+                Text {
+                    text: "No methods available for this plugin."
+                    font.family: DSTheme.fontFamily
+                    font.pixelSize: DSTheme.fontSizeDefault
+                    color: DSTheme.dimFg
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.topMargin: DSTheme.spacingXl
+                    visible: root.methods.length === 0
+                }
+            }
+        }
+
+        // Result area
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 150
+            color: DSTheme.bg
+            radius: 0
+            border.color: DSTheme.border
             border.width: 1
+            visible: root.resultText.length > 0
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 20
-                spacing: 16
+                anchors.margins: DSTheme.spacingMd
+                spacing: DSTheme.spacingSm
+
+                Text {
+                    text: "Result:"
+                    font.family: DSTheme.fontFamily
+                    font.pixelSize: DSTheme.fontSizeDefault
+                    font.bold: true
+                    color: DSTheme.dimFg
+                }
 
                 ScrollView {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     clip: true
 
-                    ColumnLayout {
-                        width: parent.width
-                        spacing: 8
-
-                        Repeater {
-                            model: root.methods
-
-                            Rectangle {
-                                Layout.fillWidth: true
-                                Layout.preferredHeight: methodColumn.implicitHeight + 24
-                                color: "#363636"
-                                radius: 6
-
-                                ColumnLayout {
-                                    id: methodColumn
-                                    anchors.fill: parent
-                                    anchors.margins: 12
-                                    spacing: 8
-
-                                    RowLayout {
-                                        Layout.fillWidth: true
-                                        spacing: 12
-
-                                        LogosText {
-                                            text: modelData.name || modelData
-                                            font.weight: Font.Bold
-                                            color: "#4A90E2"
-                                        }
-
-                                        LogosText {
-                                            text: modelData.signature || ""
-                                            font.pixelSize: Theme.typography.secondaryText
-                                            color: "#808080"
-                                            visible: modelData.signature !== undefined
-                                        }
-
-                                        Item { Layout.fillWidth: true }
-
-                                        Button {
-                                            text: "Call"
-                                            
-                                            contentItem: LogosText {
-                                                text: parent.text
-                                                font.pixelSize: Theme.typography.secondaryText
-                                                color: "#ffffff"
-                                                horizontalAlignment: Text.AlignHCenter
-                                                verticalAlignment: Text.AlignVCenter
-                                            }
-
-                                            background: Rectangle {
-                                                implicitWidth: 60
-                                                implicitHeight: 26
-                                                color: parent.pressed ? "#45a049" : "#4CAF50"
-                                                radius: 4
-                                            }
-
-                                            onClicked: {
-                                                let methodName = modelData.name || modelData
-                                                root.resultText = backend.callCoreModuleMethod(root.pluginName, methodName, "[]")
-                                            }
-                                        }
-                                    }
-
-                                    LogosText {
-                                        text: modelData.description || ""
-                                        font.pixelSize: Theme.typography.secondaryText
-                                        color: "#a0a0a0"
-                                        wrapMode: Text.Wrap
-                                        Layout.fillWidth: true
-                                        visible: modelData.description !== undefined && modelData.description.length > 0
-                                    }
-                                }
-                            }
-                        }
-
-                        // Empty state
-                        LogosText {
-                            text: "No methods available for this plugin."
-                            color: "#606060"
-                            Layout.alignment: Qt.AlignHCenter
-                            Layout.topMargin: 40
-                            visible: root.methods.length === 0
-                        }
-                    }
-                }
-
-                // Result area
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 150
-                    color: "#1e1e1e"
-                    radius: 4
-                    border.color: "#4d4d4d"
-                    border.width: 1
-                    visible: root.resultText.length > 0
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: 12
-                        spacing: 8
-
-                        LogosText {
-                            text: "Result:"
-                            font.pixelSize: Theme.typography.secondaryText
-                            font.weight: Font.Bold
-                            color: "#a0a0a0"
-                        }
-
-                        ScrollView {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            clip: true
-
-                            TextArea {
-                                text: root.resultText
-                                font.pixelSize: 12
-                                font.family: Theme.typography.publicSans
-                                color: "#4CAF50"
-                                readOnly: true
-                                wrapMode: Text.Wrap
-                                background: Rectangle {
-                                    color: "transparent"
-                                }
-                            }
+                    TextArea {
+                        text: root.resultText
+                        font.family: DSTheme.fontFamily
+                        font.pixelSize: DSTheme.fontSizeDefault
+                        color: DSTheme.cyan
+                        readOnly: true
+                        wrapMode: Text.Wrap
+                        background: Rectangle {
+                            color: "transparent"
                         }
                     }
                 }
@@ -216,6 +174,3 @@ Item {
         }
     }
 }
-
-
-

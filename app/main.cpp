@@ -7,6 +7,7 @@
 #include "inspectorserver.h"
 #endif
 #include <QApplication>
+#include <QPalette>
 #include <QIcon>
 #include <QDir>
 #include <QTimer>
@@ -54,6 +55,26 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     app.setOrganizationName("Logos");
     app.setApplicationName("LogosBasecamp");
+
+    // Doomslayer-UI: global dark palette so all widgets default to theme colors
+    QPalette darkPalette;
+    darkPalette.setColor(QPalette::Window, QColor("#1b1d1e"));
+    darkPalette.setColor(QPalette::WindowText, QColor("#c5c8c6"));
+    darkPalette.setColor(QPalette::Base, QColor("#1b1d1e"));
+    darkPalette.setColor(QPalette::AlternateBase, QColor("#2a2d2e"));
+    darkPalette.setColor(QPalette::ToolTipBase, QColor("#2a2d2e"));
+    darkPalette.setColor(QPalette::ToolTipText, QColor("#c5c8c6"));
+    darkPalette.setColor(QPalette::Text, QColor("#c5c8c6"));
+    darkPalette.setColor(QPalette::Button, QColor("#2a2d2e"));
+    darkPalette.setColor(QPalette::ButtonText, QColor("#c5c8c6"));
+    darkPalette.setColor(QPalette::BrightText, QColor("#f0c674"));
+    darkPalette.setColor(QPalette::Link, QColor("#81a2be"));
+    darkPalette.setColor(QPalette::Highlight, QColor("#3a3d3e"));
+    darkPalette.setColor(QPalette::HighlightedText, QColor("#c5c8c6"));
+    darkPalette.setColor(QPalette::Mid, QColor("#4a4d4e"));
+    darkPalette.setColor(QPalette::Dark, QColor("#1b1d1e"));
+    darkPalette.setColor(QPalette::Shadow, QColor("#0a0a0a"));
+    app.setPalette(darkPalette);
 
     // Set up module directories for logos core.
     // 1. Embedded modules directory (pre-installed at build time, read-only)

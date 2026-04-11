@@ -7,6 +7,8 @@
 #include <QMap>
 #include <QSet>
 #include <QTimer>
+#include <QFile>
+#include <QIODevice>
 #include "logos_api.h"
 #include "logos_api_client.h"
 #include "IComponent.h"
@@ -34,6 +36,9 @@ class MainUIBackend : public QObject {
     Q_PROPERTY(QString currentVisibleApp READ currentVisibleApp NOTIFY currentVisibleAppChanged)
     Q_PROPERTY(QStringList loadingModules READ loadingModules NOTIFY loadingModulesChanged)
 
+    // Doomslayer-UI theme (shared across all QML engines)
+    Q_PROPERTY(QString currentTheme READ currentTheme WRITE setCurrentTheme NOTIFY currentThemeChanged)
+
 public:
     explicit MainUIBackend(LogosAPI* logosAPI = nullptr, QObject* parent = nullptr);
     ~MainUIBackend();
@@ -53,9 +58,26 @@ public:
     QString currentVisibleApp() const;
     QStringList loadingModules() const;
 
+    // Theme
+    QString currentTheme() const { return m_currentTheme; }
+
 public slots:
     // Navigation
     void setCurrentActiveSectionIndex(int index);
+
+    // Theme
+    void setCurrentTheme(const QString& theme) {
+        if (m_currentTheme != theme) {
+            m_currentTheme = theme;
+            emit currentThemeChanged();
+            // Write to file so plugins can sync
+            QFile f("/tmp/.doomslayer-theme");
+            if (f.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                f.write(theme.toUtf8());
+                f.close();
+            }
+        }
+    }
     // UI Module operations
     void loadUiModule(const QString& moduleName);
     void unloadUiModule(const QString& moduleName);
@@ -85,6 +107,7 @@ signals:
     void launcherAppsChanged();
     void currentVisibleAppChanged();
     void loadingModulesChanged();
+    void currentThemeChanged();
     void navigateToApps();
     
     // Signals for C++ MdiView coordination
@@ -122,6 +145,7 @@ private:
     
     // Navigation state
     int m_currentActiveSectionIndex;
+    QString m_currentTheme = "default";
     QVariantList m_sections;
     
     // UI Modules state

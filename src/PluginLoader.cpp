@@ -13,6 +13,7 @@
 #include <QQmlError>
 #include <QQuickWidget>
 #include <QThread>
+#include <QProcessEnvironment>
 #include <QTimer>
 #include <QUrl>
 
@@ -215,6 +216,11 @@ void PluginLoader::loadQmlPluginAsync(const PluginLoadRequest& request)
             QCoreApplication::applicationDirPath() + QStringLiteral("/../lib")).absolutePath();
         if (QDir(appLibPath).exists())
             importPaths << appLibPath;
+        // Doomslayer-UI: inject theme so plugins can use DSTheme
+        QString qmlUi = QProcessEnvironment::systemEnvironment().value("QML_UI", "");
+        if (!qmlUi.isEmpty()) {
+            importPaths << QDir(qmlUi).absolutePath() + "/qml";
+        }
         engine->setImportPathList(importPaths);
 
         engine->setPluginPathList({});
