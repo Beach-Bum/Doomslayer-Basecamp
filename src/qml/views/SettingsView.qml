@@ -47,11 +47,12 @@ Item {
                     height: 22
                     color: DSTheme.currentTheme === modelData ? DSTheme.activeBg : tpMa.containsMouse ? DSTheme.statusBg : "transparent"
 
-                    RowLayout {
-                        anchors.fill: parent
+                    Row {
+                        anchors.left: parent.left
                         anchors.leftMargin: 8
+                        anchors.verticalCenter: parent.verticalCenter
                         spacing: 8
-                        Text { text: DSTheme.currentTheme === modelData ? "\u2713" : " "; color: DSTheme.cyan; font.family: DSTheme.fontFamily; font.pixelSize: 12; Layout.preferredWidth: 14 }
+                        Text { text: DSTheme.currentTheme === modelData ? "\u2713" : " "; color: DSTheme.cyan; font.family: DSTheme.fontFamily; font.pixelSize: 12; width: 14 }
                         Text { text: modelData; color: DSTheme.currentTheme === modelData ? DSTheme.fg : DSTheme.blue; font.family: DSTheme.fontFamily; font.pixelSize: 12 }
                     }
 
