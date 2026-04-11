@@ -1,21 +1,28 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import theme 1.0
+import "../theme"
 
 Item {
     id: root
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: DSTheme.spacingMd
+        spacing: 8
 
-        DSSectionTitle { text: "UI Modules"; small: true }
+        // Section title
+        RowLayout {
+            spacing: 0
+            Layout.leftMargin: 0
+            Text { text: "\u251C\u2500 "; color: DSTheme.border; font.family: DSTheme.fontFamily; font.pixelSize: 13 }
+            Text { text: "UI Modules"; color: DSTheme.fg; font.family: DSTheme.fontFamily; font.pixelSize: 13; font.bold: true }
+            Text { text: " \u2500"; color: DSTheme.border; font.family: DSTheme.fontFamily; font.pixelSize: 13 }
+        }
 
         Text {
             text: "Available UI plugins in the system"
             font.family: DSTheme.fontFamily
-            font.pixelSize: DSTheme.fontSizeDefault
+            font.pixelSize: 11
             color: DSTheme.dimFg
         }
 
@@ -33,20 +40,19 @@ Item {
 
                     Rectangle {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: DSTheme.rowHeight
+                        height: 28
                         color: index % 2 === 0 ? DSTheme.bg : DSTheme.altBg
-                        radius: 0
 
                         RowLayout {
                             anchors.fill: parent
-                            anchors.leftMargin: DSTheme.spacingMd
-                            anchors.rightMargin: DSTheme.spacingMd
-                            spacing: DSTheme.spacingMd
+                            anchors.leftMargin: 8
+                            anchors.rightMargin: 8
+                            spacing: 12
 
                             Text {
                                 text: modelData.name
                                 font.family: DSTheme.fontFamily
-                                font.pixelSize: DSTheme.fontSizeDefault
+                                font.pixelSize: 12
                                 font.bold: true
                                 color: DSTheme.yellow
                                 Layout.preferredWidth: 160
@@ -55,37 +61,48 @@ Item {
                             Text {
                                 text: modelData.isLoaded ? "(loaded)" : "(not loaded)"
                                 font.family: DSTheme.fontFamily
-                                font.pixelSize: DSTheme.fontSizeDefault
+                                font.pixelSize: 11
                                 color: modelData.isLoaded ? DSTheme.cyan : DSTheme.dimFg
                             }
 
                             Item { Layout.fillWidth: true }
 
-                            DSButton {
-                                text: "Load"
-                                primary: true
+                            // Load button
+                            Rectangle {
                                 visible: !modelData.isMainUi && !modelData.isLoaded
-                                onClicked: backend.loadUiModule(modelData.name)
+                                implicitWidth: loadTxt.implicitWidth + 16
+                                implicitHeight: 20
+                                color: "transparent"
+                                border.color: DSTheme.cyan
+                                border.width: 1
+
+                                Text { id: loadTxt; anchors.centerIn: parent; text: "[Load]"; color: DSTheme.cyan; font.family: DSTheme.fontFamily; font.pixelSize: 11 }
+                                MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: backend.loadUiModule(modelData.name) }
                             }
 
-                            DSButton {
-                                text: "Unload"
-                                danger: true
+                            // Unload button
+                            Rectangle {
                                 visible: !modelData.isMainUi && modelData.isLoaded
-                                onClicked: backend.unloadUiModule(modelData.name)
+                                implicitWidth: unloadTxt.implicitWidth + 16
+                                implicitHeight: 20
+                                color: "transparent"
+                                border.color: DSTheme.red
+                                border.width: 1
+
+                                Text { id: unloadTxt; anchors.centerIn: parent; text: "[Unload]"; color: DSTheme.red; font.family: DSTheme.fontFamily; font.pixelSize: 11 }
+                                MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: backend.unloadUiModule(modelData.name) }
                             }
                         }
                     }
                 }
 
-                // Empty state
                 Text {
-                    text: "No UI plugins found in the plugins directory."
+                    text: "No UI plugins found."
                     font.family: DSTheme.fontFamily
-                    font.pixelSize: DSTheme.fontSizeDefault
+                    font.pixelSize: 11
                     color: DSTheme.dimFg
                     Layout.alignment: Qt.AlignHCenter
-                    Layout.topMargin: DSTheme.spacingXl
+                    Layout.topMargin: 16
                     visible: backend.uiModules.length === 0
                 }
             }

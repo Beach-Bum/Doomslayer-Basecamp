@@ -1,0 +1,9 @@
+{
+  "name": "daemon_ai",
+  "description": "daemon-ai — Local LLM inference with Mamba SSM",
+  "icons": "icons/daemon.png",
+  "main": "daemon_ai",
+  "type": "ui_qml",
+  "version": "1.0.0",
+  "qml_entry": "Main.qml"
+}

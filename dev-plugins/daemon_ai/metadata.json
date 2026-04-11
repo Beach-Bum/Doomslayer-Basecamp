@@ -1,0 +1,8 @@
+{
+  "name": "daemon_ai",
+  "version": "1.0.0",
+  "description": "daemon-ai — Local LLM inference with Mamba SSM",
+  "type": "ui",
+  "main": "daemon_ai",
+  "icons": "icons/daemon.png"
+}
