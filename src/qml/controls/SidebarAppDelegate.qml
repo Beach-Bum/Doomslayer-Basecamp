@@ -15,6 +15,7 @@ AbstractButton {
 
     readonly property string _iconSource: {
         var n = root.text.toLowerCase()
+        if (n.indexOf("daemon") >= 0)      return _iconsDir + "daemon.png"
         if (n.indexOf("counter_qml") >= 0) return _iconsDir + "terminal.png"
         if (n.indexOf("counter") >= 0)     return _iconsDir + "counter.png"
         if (n.indexOf("package") >= 0)     return _iconsDir + "packages.png"
