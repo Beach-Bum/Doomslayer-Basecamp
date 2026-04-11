@@ -26,6 +26,17 @@ This branch applies the Doomslayer-UI design system across the entire Basecamp a
 - **counter_qml** — fully reskinned with DSTheme, theme syncs via file polling
 - **package_manager_ui** — all hardcoded colors replaced with DSTheme properties
 
+## Screenshots
+
+| | |
+|:---:|:---:|
+| ![Dashboard](screenshots/basecamp-dashboard.png) | ![Modules](screenshots/basecamp-modules.png) |
+| **Dashboard** — node health & system stats | **Modules** — plugin management |
+| ![Settings](screenshots/basecamp-settings.png) | ![Counter](screenshots/basecamp-counter.png) |
+| **Settings** — theme picker & network config | **Counter Plugin** — QML module example |
+| ![Solarized](screenshots/basecamp-modules-solarized.png) | |
+| **Modules (Solarized)** — runtime theme switching | |
+
 ## Themes
 
 Switch themes in **Settings > Appearance** or via the top title bar. All engines sync.
