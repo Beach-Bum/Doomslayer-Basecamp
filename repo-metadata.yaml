@@ -1,0 +1,60 @@
+schema_version: 1
+
+id: "doomslayer-basecamp"
+name: "Doomslayer Basecamp"
+current_repo: "Beach-Bum/Doomslayer-Basecamp"
+canonical_repo: "Beach-Bum/doomslayer-basecamp"
+canonical_site_url: ""
+
+status: "active"
+type: "product"
+visibility: "public"
+public_posture: "public-system-artifact"
+migration_stage: "docs-only"
+risk: "medium"
+
+summary: "A public paired demo/app repo for Doomslayer UI with CI-built desktop artifacts."
+
+thesis_relation:
+  - design-systems
+  - interface-systems
+  - creative-engineering
+
+stack:
+  languages:
+    - QML
+  frameworks:
+    - Qt6
+  package_managers:
+    - CMake
+  deployment:
+    - GitHub Actions
+  design_systems:
+    - Doomslayer UI
+
+links:
+  github: "https://github.com/Beach-Bum/Doomslayer-Basecamp"
+  site: ""
+  demo: ""
+  docs: ""
+  citation: ""
+
+related_repositories:
+  - "Beach-Bum/Doomslayer-UI"
+  - "Beach-Bum/nk-system"
+
+checks:
+  install: ""
+  lint: ""
+  typecheck: ""
+  test: ""
+  build: ""
+
+publication:
+  license: "Apache-2.0 + MIT indicated by audit"
+  citation_required: false
+  contains_private_assets: "unknown"
+  contains_credentials_or_secrets: "no obvious credentials found in audit"
+  safe_to_make_public: "already-public"
+
+notes: "Public paired demo/app repo for Doomslayer UI. CI builds AppImage/macOS artifacts but no live service detected. Doomslayer UI appears vendored/copied into src/qml/theme rather than consumed as an external dependency. Future Doomslayer-UI rename should not break builds, but README links may go stale. Contains doomguy pixel art and stale Logos Core Team attribution; review attribution/IP before broader polishing."
